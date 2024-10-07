@@ -145,6 +145,31 @@ void	rrr(int *a, int *b)
 	rrb(a, b);
 }
 
+int	measure(void f(int *a, int *b), int *p)
+{
+	int	c;
+	int	m1;
+	int	m2;
+
+	c = 1;
+	m1 = 0;
+	m2 = 0;
+	while (p[c] != '\0')
+	{
+		m1 += (p[c] - p[c - 1]);
+		c++;
+	}
+	p = f(p);
+	c = 1;
+	while (p[c] != '\0')
+	{
+		m2 += (p[c] - p[c - 1];
+		c++;
+	}
+	return(m1 - m2);
+}
+
+int	move(
 #include <stdio.h>
 
 int main()
