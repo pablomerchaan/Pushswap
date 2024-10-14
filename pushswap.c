@@ -41,6 +41,7 @@ change *SASB(change *prev, int lenght)
 	}
 	return (new_change);
 }
+
 change *R(change *prev, int lenght)
 {
 	change new_change;
@@ -155,7 +156,7 @@ int	norm(change *prev, change *candidate)
 		return(|prev->idx - candidate->idx| + 1);
 }
 
-int	measure(change *actual, int *a, int lenght, int norm)
+int	measure(int *a, int lenght, int norm)
 {
 	int	measure;
 	int	c;
@@ -180,18 +181,32 @@ int	measure(change *actual, int *a, int lenght, int norm)
 	return (measure);
 }
 
+//falta una funcion que "traduzca" los cambios que usamos a los que dan en el enunciado
 
-pushswap()
+pushswap(int *stack)
 {
-/Con la norma y la medida, haremos el bucle principal:
-mientras no esté ordenada:
-	best_change = gen_change(change)
-	while(gen_change O la medida de bestchange sea tal)
-		if medida(new_change) mejor que medida(best change)
-			best_change = new_change;
-		else
-			new_change = gen_change(new_change);
-	change=best_change
-	print(best_change)
-	
-}		
+	struct change	bestchange;
+	struct change	candidate;
+	int	*partition;
+	int	lenght;
+
+	lenght = strlen(stack);
+	while (measure > algo)
+	{
+		bestchange = (SA, 2);
+		candidate = (SA, 3);
+		while (candidate)
+		{
+			if (measure(candidate, stack, lenght, norm) < measure(bestchange))
+			{
+				bestchange = candidate;
+				candidate = gen_change(candidate, lenght);
+			}
+			else
+				candidate = gen_change(candidate, lenght);
+		}
+		printf(bestchange);
+		//aplicar el cambio ganador al stack;
+	}
+	return();
+}
