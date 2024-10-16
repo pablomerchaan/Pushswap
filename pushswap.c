@@ -156,57 +156,206 @@ int	norm(change *prev, change *candidate)
 		return(|prev->idx - candidate->idx| + 1);
 }
 
-int	measure(int *a, int lenght, int norm)
+int	measureSASB(struct change actual, int *list)
 {
-	int	measure;
 	int	c;
-	int	sum;
+	int	measure;
 
-	measure = 0;
-	c = 0;
-	sum = 0;
-	while (a[c] != '\0')
-	{
-		c++;
-		sum += a[c];
-	}
 	c = 1;
-	while (a[c] != '\0')
+	measure = 0;
+	if (actual->type = SA)
 	{
-		measure += (a[c] - a[c - 1]);
-		c++;
+		while (list[c] != '\0')
+		{
+			if (actual->idx = c + 2)
+			{
+				measure += list[c + 2] - list[c];
+				measure += list[c + 1] - list [c + 2];
+				measure += list[c + 3] - list[c]
+				c = c + 2;
+			}
+			else
+				measure += list[c] - list[c - 1];
+			c++;
+		}
 	}
-	measure = measure/norm;
-	measure = measure/sum;
+	else
+	{
+		c = strlen(list)/n;
+		while(list[c] != '\0')
+		{
+			if (actual->idx = c + 2)
+			{ 
+				measure += list[c + 2] - list[c];
+				measure += list[c + 1] - list [c - 1];
+				measure += list[c] - list[c + 1];
+				c = c + 2;
+			}
+			else
+				measure += list[c] - list[c - 1];
+			c++;
+		}
+	}
 	return (measure);
 }
 
-//falta una funcion que "traduzca" los cambios que usamos a los que dan en el enunciado
+int	measureR(struct change actual, int *list)
+{
+	int	c;
+	int	measure;
+	int	lenght;
 
-pushswap(int *stack)
+	lenght = strlen(list);
+	measure = 0;
+	if (actual->type = RA)
+	{
+		c = 1;
+		while (list[c] != '\0')
+		{
+			if (actual->idx = c + 1)
+			{
+				measure += list[0] - list[c - 1];
+				measure += list[c] - list[c - 2];
+				c++;
+			}
+			else
+				measure += list[c]  - list[c - 1];
+			c++;
+		}
+	}
+	else if (actual->type = RB)
+	{
+		c = 1;
+		while (list[c + 2] != '\0')
+		{
+			if (actual->idx = c)
+			{
+				measure += list[c] - list[lenght];
+				measure += list[c + 1] - list[c - 1];
+			}
+			else
+				measure += list[c]  - list[c - 1];
+			c++;
+		}
+	}
+	else
+	{
+		c = 1;
+		while (list[c + 1] != '\0')
+		{
+			if (actual->idx = c - 1)
+			{
+				measure += list[c] - list[lenght];
+				measure += list[c + 1] - list[c - 2];
+				measure += list[0] - list[c - 1];
+				c = c + 2;
+			}
+			else
+				measure += list[c]  - list[c - 1];
+			c++;
+		}
+	}
+	return (measure);
+}
+
+int	measureRR(struct change actual, int *list)
+{
+	int	c;
+	int	measure;
+	int	lenght;
+
+	lenght = strlen(list);
+	measure = 0;
+	if (actual->type = RRA)
+	{
+		c = 2;
+		while (list[c] != '\0')
+		{
+			if (actual->idx = c)
+			{
+				measure += list[c] - list[0];
+				measure += list[0] - list[c - 1];
+				c++;
+			}
+			else
+				measure += list[c]  - list[c - 1];
+			c++;
+		}
+	}
+	else if (actual->type = RRB)
+	{
+		c = 1;
+		while (list[c + 2] != '\0')
+		{
+			if (actual->idx = c)
+			{
+				measure += list[lenght] - list[c - 1];
+				measure += list[c] - list[lenght];
+				c++;
+			}
+			else
+				measure += list[c]  - list[c - 1];
+		c++;
+		}
+	}
+	else
+	{
+		c = 2;
+		while (list[c + 1] != '\0')
+		{
+			if (actual->idx = c)
+			{
+				measure += list[c] - list[lenght];
+				measure += list[lenght] - list[c - 1];
+				measure += list[0] - list[c - 1];
+				c++;
+			}
+			else
+				measure += list[c]  - list[c - 1];
+			c++;
+		}
+	}
+	return (measure);
+}
+
+int	measure(change *actual, int *list, int norm)
+{
+	int sum;
+	
+	if (actual->type == SA || actual->type == SB)
+		measure = measureSASB(actual, list);
+	else if (actual->type = RA || actual->type = RB || actual->type = RR)
+		measure = measureR(actual, list);
+	else if (actual->type = RRA || actual->type = RRB || actual->type = RRR)
+		measure = measureRR(actual, list);
+	return(measure);
+}
+
+pushswap(int *list)
 {
 	struct change	bestchange;
 	struct change	candidate;
-	int	*partition;
+	int	partition;
 	int	lenght;
 
-	lenght = strlen(stack);
-	while (measure > algo)
+	lenght = strlen(list);
+	partition = lenght;
+	bestchange = (SB, 0);
+	while (best_change != NULL)
 	{
-		bestchange = (SA, 2);
-		candidate = (SA, 3);
-		while (candidate)
+		bestchange = NULL;
+		candidate = (SB, 0);
+		while (candidate != NULL)
 		{
-			if (measure(candidate, stack, lenght, norm) < measure(bestchange))
-			{
+			if (measure(candidate, list, lenght, norm) < measure(bestchange))
 				bestchange = candidate;
-				candidate = gen_change(candidate, lenght);
-			}
-			else
-				candidate = gen_change(candidate, lenght);
+			candidate = gen_change(candidate, lenght);
 		}
-		printf(bestchange);
-		//aplicar el cambio ganador al stack;
+		new array of changes = convert(bestchange, partition);
+		partition = bestchange->idx;
+		add new_array to changelist;
+		//añadir el cambio a la lista
+		//aplicar el bestchange al list;  
 	}
 	return();
 }
