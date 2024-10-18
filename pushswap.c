@@ -156,12 +156,20 @@ int	norm(change *prev, change *candidate)
 		return(|prev->idx - candidate->idx| + 1);
 }
 
+int	sq(int c)
+{
+	int	r;
+
+	r = c * c;
+	return(r);
+}
+
 int	measureSASB(struct change actual, int *list)
 {
 	int	c;
 	int	measure;
 
-	c = 1;
+	c = 0;
 	measure = 0;
 	if (actual->type = SA)
 	{
@@ -169,30 +177,28 @@ int	measureSASB(struct change actual, int *list)
 		{
 			if (actual->idx = c + 2)
 			{
-				measure += list[c + 2] - list[c];
-				measure += list[c + 1] - list [c + 2];
-				measure += list[c + 3] - list[c]
-				c = c + 2;
+				measure += sq(list[c] - c - 1);
+				measure += sq(list[c + 1] - c);
+				c++;
 			}
 			else
-				measure += list[c] - list[c - 1];
+				measure += sq(list[c] - c);
 			c++;
 		}
 	}
 	else
 	{
-		c = strlen(list)/n;
+		c = 0;
 		while(list[c] != '\0')
 		{
-			if (actual->idx = c + 2)
-			{ 
-				measure += list[c + 2] - list[c];
-				measure += list[c + 1] - list [c - 1];
-				measure += list[c] - list[c + 1];
-				c = c + 2;
+			if (actual->idx = c)
+			{
+				measure += sq(list[c] - c - 1);
+				measure += sq(list[c + 1] - c);
+				c++;
 			}
 			else
-				measure += list[c] - list[c - 1];
+				measure += sq(list[c] - c);
 			c++;
 		}
 	}
@@ -209,49 +215,51 @@ int	measureR(struct change actual, int *list)
 	measure = 0;
 	if (actual->type = RA)
 	{
-		c = 1;
+		c = 0;
+		measure += sq(list[actual->idx - 1]);
+		while (actual->idx != c + 2)
+		{
+			measure += sq(list[c] - c - 1);
+			c++;
+		}
+		c = c + 2;
 		while (list[c] != '\0')
 		{
-			if (actual->idx = c + 1)
-			{
-				measure += list[0] - list[c - 1];
-				measure += list[c] - list[c - 2];
-				c++;
-			}
-			else
-				measure += list[c]  - list[c - 1];
+			measure += sq(list[c]  - c);
 			c++;
 		}
 	}
 	else if (actual->type = RB)
 	{
-		c = 1;
-		while (list[c + 2] != '\0')
+		c = 0;
+		while (actual->idx != c)
 		{
-			if (actual->idx = c)
-			{
-				measure += list[c] - list[lenght];
-				measure += list[c + 1] - list[c - 1];
-			}
-			else
-				measure += list[c]  - list[c - 1];
+			measure += list[c] - c;
+			c++;
+		}
+		measure += sq(list[c] - lenght + 1);
+		c++;
+		while (list[c] != '\0')
+		{
+			measure += list[c]  - c + 1;
 			c++;
 		}
 	}
-	else
+	else //RR
 	{
-		c = 1;
-		while (list[c + 1] != '\0')
+		c = 0;
+		measure += sq(list[actual->idx - 1]);
+		while (actual->idx != c + 2)
 		{
-			if (actual->idx = c - 1)
-			{
-				measure += list[c] - list[lenght];
-				measure += list[c + 1] - list[c - 2];
-				measure += list[0] - list[c - 1];
-				c = c + 2;
-			}
-			else
-				measure += list[c]  - list[c - 1];
+			measure += sq(list[c] - c - 1);
+			c++;
+		}
+		c = c + 2;
+		measure += sq(list[c] - lenght + 1);
+		c++;
+		while (list[c] != '\0')
+		{
+			measure += list[c]  - c + 1;
 			c++;
 		}
 	}
@@ -268,50 +276,50 @@ int	measureRR(struct change actual, int *list)
 	measure = 0;
 	if (actual->type = RRA)
 	{
-		c = 2;
+		c = 1;
+		while (actual->idx != c + 1)
+		{
+			measure += sq(list[c] - c + 1);
+			c++;
+		}
+		measure += sq(list[0] - c);
+		c++;
 		while (list[c] != '\0')
 		{
-			if (actual->idx = c)
-			{
-				measure += list[c] - list[0];
-				measure += list[0] - list[c - 1];
-				c++;
-			}
-			else
-				measure += list[c]  - list[c - 1];
+			measure += sq(list[c]  - c);
 			c++;
 		}
 	}
 	else if (actual->type = RRB)
 	{
-		c = 1;
-		while (list[c + 2] != '\0')
+		c = 0;
+		while (actual->idx != c)
 		{
-			if (actual->idx = c)
-			{
-				measure += list[lenght] - list[c - 1];
-				measure += list[c] - list[lenght];
-				c++;
-			}
-			else
-				measure += list[c]  - list[c - 1];
-		c++;
+			measure += list[c] - c;
+			c++;
 		}
-	}
-	else
-	{
-		c = 2;
+		measure += sq(list[lenght - 1] - c);
+		c++;
 		while (list[c + 1] != '\0')
 		{
-			if (actual->idx = c)
-			{
-				measure += list[c] - list[lenght];
-				measure += list[lenght] - list[c - 1];
-				measure += list[0] - list[c - 1];
-				c++;
-			}
-			else
-				measure += list[c]  - list[c - 1];
+			measure += list[c]  - c - 1;
+			c++;
+		}
+	}
+	else //RRR
+	{
+		c = 1;
+		while (actual->idx != c + 1)
+		{
+			measure += sq(list[c] - c + 1);
+			c++;
+		}
+		measure += sq(list[0] - c);
+		c++;
+		measure += sq(list[lenght - 1] - c);
+		while (list[c + 1] != '\0')
+		{
+			measure += list[c]  - c - 1;
 			c++;
 		}
 	}
