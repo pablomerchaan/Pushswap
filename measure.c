@@ -1,4 +1,4 @@
-#include <pushswap.h>
+#include "pushswap.h"
 
 int	measureSASB(struct change actual, int *list, int length)
 {
@@ -7,11 +7,11 @@ int	measureSASB(struct change actual, int *list, int length)
 
 	c = 0;
 	measure = 0;
-	if (actual.type = SA)
+	if (actual.type == 2)
 	{
 		while (c < length)
 		{
-			if (actual.idx = c + 2)
+			if (actual.idx == c + 2)
 			{
 				measure += sq(list[c] - c - 1);
 				measure += sq(list[c + 1] - c);
@@ -27,7 +27,7 @@ int	measureSASB(struct change actual, int *list, int length)
 		c = 0;
 		while(c < length)
 		{
-			if (actual.idx = c)
+			if (actual.idx == c)
 			{
 				measure += sq(list[c] - c - 1);
 				measure += sq(list[c + 1] - c);
@@ -50,7 +50,7 @@ int	measureSS(struct change actual, int *list, int length)
 	measure = 0;
 	while (c < length)
 	{
-		if (actual.idx = c + 2)
+		if (actual.idx == c + 2)
 		{
 			measure += sq(list[c] - c - 1);
 			measure += sq(list[c + 1] - c);
@@ -63,6 +63,7 @@ int	measureSS(struct change actual, int *list, int length)
 			measure += sq(list[c] - c);
 		c++;
 	}
+	return (measure);
 }
 
 int	measureR(struct change actual, int *list, int length)
@@ -71,7 +72,7 @@ int	measureR(struct change actual, int *list, int length)
 	int	measure;
 
 	measure = 0;
-	if (actual.type = RA)
+	if (actual.type == 5)
 	{
 		c = 0;
 		measure += sq(list[actual.idx - 1]);
@@ -81,25 +82,25 @@ int	measureR(struct change actual, int *list, int length)
 			c++;
 		}
 		c = c + 2;
-		while (list[c] != '\0')
+		while (c < length)
 		{
 			measure += sq(list[c]  - c);
 			c++;
 		}
 	}
-	else if (actual.type = RB)
+	else if (actual.type == 6)
 	{
 		c = 0;
 		while (actual.idx != c)
 		{
-			measure += list[c] - c;
+			measure += sq(list[c] - c);
 			c++;
 		}
 		measure += sq(list[c] - length + 1);
 		c++;
-		while (list[c] != '\0')
+		while (c < length)
 		{
-			measure += list[c]  - c + 1;
+			measure += sq(list[c]  - c + 1);
 			c++;
 		}
 	}
@@ -115,9 +116,9 @@ int	measureR(struct change actual, int *list, int length)
 		c = c + 2;
 		measure += sq(list[c] - length + 1);
 		c++;
-		while (list[c] != '\0')
+		while (c < length)
 		{
-			measure += list[c]  - c + 1;
+			measure += sq(list[c]  - c + 1);
 			c++;
 		}
 	}
@@ -130,9 +131,9 @@ int	measureRR(struct change actual, int *list, int length)
 	int	measure;
 
 	measure = 0;
-	if (actual.type = RRA)
+	if (actual.type == 8)
 	{
-		c = 1;
+		c = 0;
 		while (actual.idx != c + 1)
 		{
 			measure += sq(list[c] - c + 1);
@@ -140,31 +141,31 @@ int	measureRR(struct change actual, int *list, int length)
 		}
 		measure += sq(list[0] - c);
 		c++;
-		while (list[c] != '\0')
+		while (c < length)
 		{
 			measure += sq(list[c]  - c);
 			c++;
 		}
 	}
-	else if (actual.type = RRB)
+	else if (actual.type == 9)
 	{
 		c = 0;
 		while (actual.idx != c)
 		{
-			measure += list[c] - c;
+			measure += sq(list[c] - c);
 			c++;
 		}
 		measure += sq(list[length - 1] - c);
 		c++;
-		while (list[c + 1] != '\0')
+		while (c + 1 < length)
 		{
-			measure += list[c]  - c - 1;
+			measure += sq(list[c]  - c + 1);
 			c++;
 		}
 	}
 	else //RRR
 	{
-		c = 1;
+		c = 0;
 		while (actual.idx != c + 1)
 		{
 			measure += sq(list[c] - c + 1);
@@ -172,27 +173,29 @@ int	measureRR(struct change actual, int *list, int length)
 		}
 		measure += sq(list[0] - c);
 		c++;
-		measure += sq(list[length - 1] - c);
-		while (list[c + 1] != '\0')
+		measure += sq(list[c] - length + 1);
+		c++;
+		while (c + 1 < length)
 		{
-			measure += list[c]  - c - 1;
+			measure += sq(list[c]  - c + 1);
 			c++;
 		}
 	}
 	return (measure);
 }
 
-int	measure(struct change actual, int *list, int norm, int length)
+int	measure(struct change actual, int *list, int length)
 {
-	int sum;
-	
-	if (actual.type == SA || actual.type == SB)
-		measure = measureSASB(actual, list, length);
-	else if (actual.type == SS)
-		measure = measureSS(actual, list, length);
-	else if (actual.type = RA || actual.type = RB || actual.type = RR)
-		measure = measureR(actual, list, length);
-	else if (actual.type = RRA || actual.type = RRB || actual.type = RRR)
-		measure = measureRR(actual, list, length);
-	return(measure);
+	int	m;
+	if (actual.type == 0)
+		m = INT_MAX;
+	if (actual.type == 2 || actual.type == 3)
+		m = measureSASB(actual, list, length);
+	else if (actual.type == 4)
+		m = measureSS(actual, list, length);
+	else if (actual.type == 5 || actual.type == 6 || actual.type == 7)
+		m = measureR(actual, list, length);
+	else if (actual.type == 8 || actual.type == 9 || actual.type == 10)
+		m = measureRR(actual, list, length);
+	return(m);
 }

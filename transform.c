@@ -1,24 +1,24 @@
-#include <pushswap.h>
+#include "pushswap.h"
 
 int	*transform(int *list, struct change actual, int length)
 {
-	if (actual.type = SA)
+	if (actual.type == SA)
 		list = transformSA(list, actual.idx);
-	else if (actual.type = SB)
+	else if (actual.type == SB)
 		list = transformSB(list, actual.idx);
-	else if (actual.type = SS)
+	else if (actual.type == SS)
 		list = transformSS(list, actual.idx);
-	else if (actual.type = RA)
+	else if (actual.type == RA)
 		list = transformRA(list, actual.idx);
-	else if (actual.type = RB)
+	else if (actual.type == RB)
 		list = transformRB(list, actual.idx, length);
-	else if (actual.type = RR)
+	else if (actual.type == RR)
 		list = transformRR(list, actual.idx, length);
-	else if (actual.type = RRA)
+	else if (actual.type == RRA)
 		list = transformRRA(list, actual.idx);
-	else if (actual.type = RRB)
+	else if (actual.type == RRB)
 		list = transformRRB(list, actual.idx, length);
-	else if (actual.type = RRR)
+	else if (actual.type == RRR)
 		list = transformRRR(list, actual.idx, length);
 	return (list);
 }
@@ -104,7 +104,7 @@ int	*transformRR(int *list, int idx, int length)
 	list[0] = tmp;
 	tmp = list[idx];
 	c = idx;
-	while (c + 1 != lenght)
+	while (c + 1 != length)
 	{
 		list[c] = list[c + 1];
 		c++;

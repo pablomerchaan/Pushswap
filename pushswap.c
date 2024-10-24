@@ -1,14 +1,23 @@
-#include <pushswap.h>
+#include "pushswap.h"
 
 
-int	norm(change prev, change candidate)
+int	norm(struct change prev, int partition)
 {
-	if (prev.idx == candidate.idx)
+	int	c;
+
+	c = 0;
+	if (prev.idx == partition)
 	{
 		return (1);
 	}
 	else
-		return(|prev.idx - candidate.idx| + 1);
+	{
+		if (prev.idx < partition)
+			c = partition - prev.idx;
+		else
+			c = prev.idx - partition;
+	}
+	return(c + 1);
 }
 
 int	sq(int c)
@@ -21,15 +30,17 @@ int	sq(int c)
 
 
 
-enum type_of_change	convert(struct change prev, struct change actual)
+int	*convert(struct change prev, struct change actual)
 {
 	int	c;
-	int	moves[];
+	int	*moves;
 //TODO asegurarse de como inicializar moves y porque, para despues alocarlo correctamente.
 	if (prev.idx <= actual.idx)
 	{
 		c = actual.idx - prev.idx;
 		moves = malloc(sizeof(int) * (c + 2));
+		if (!moves)
+			return (NULL);
 		moves[c] = actual.type;
 		c--;
 		while (c <= 0)
@@ -41,7 +52,7 @@ enum type_of_change	convert(struct change prev, struct change actual)
 	else
 	{
 		c = prev.idx - actual.idx;
-		moves = malloc(sizeof(struct type) * (c + 1));
+		moves = malloc(sizeof(int) * (c + 1));
 		moves[c] = actual.type;
 		c--;
 		while (c <= 0)
@@ -52,42 +63,74 @@ enum type_of_change	convert(struct change prev, struct change actual)
 	}
 	return (moves);
 }
-//TODO hacer bien toda la funcion pushswap.
-int	main(int argc,char argv[])
+int	fastmeasure(int *list, int length)
+{
+	int	c;
+	int	sum;
+
+	c = 0;
+	sum = 0;
+	while (c < length)
+	{
+		sum += sq(list[c] - c);
+		c++;
+	}
+	return (sum);
+}
+
+int	main(int argc, char **argv)
 {
 	struct change	bestchange;
 	struct change	candidate;
+	struct change	tmp;
 	int	*list;
+	int	partition;
 	int	length;
+	int	me;
+	int	l;
 
 	list = NULL;
 	if (argc < 2)
-		ft_printf("mensaje de error");
+		printf("mensaje de error");
 	list = malloc(sizeof(int) * (argc - 1));
-	if (list == NULL)
-		return(NULL);
 	length = 0;
 	while (length < argc - 1)
 	{
 		list[length] = ft_atoi(argv[length + 1]);
 		length++;
 	}
-	bestchange = {SB, 0};
-	while (best_change != NULL)
+	bestchange.type = 1;
+	bestchange.idx = 0;
+	partition = 0;
+	while (bestchange.type != 0)
 	{
-		bestchange = NULL;
-		candidate = {SB, 0};
-		while (candidate != NULL)
+		bestchange.type = 0;
+		bestchange.idx = 0;
+		candidate.type = 2;
+		candidate.idx = 2;
+		while (candidate.type != 0)
 		{
-			if (measure(candidate, list, length, norm) < measure(bestchange))
-				bestchange = candidate;
+			me = measure(candidate, list, length); 
+			if (me < fastmeasure(list, length))
+			{
+				if (me/norm(candidate, partition) < measure(bestchange, list, length)/norm(bestchange, partition))
+					bestchange = candidate;
+			}
 			candidate = gen_change(candidate, length);
+		//printf("%i", bestchange.type);
 		}
-		new array of changes = convert(prev, bestchange);
 		partition = bestchange.idx;
-		add new_array to changelist;
-		//añadir el cambio a la lista
-		//aplicar el bestchange al list;  
+		printf(",");
+		if (bestchange.type != 0)
+		{
+			transform(list, bestchange, length);
+			l = length;
+			while (l > 0)
+			{
+				printf("%i ", list[l - 1]);
+				l--;
+			}
+		}
 	}
-	return();
+	return(0);
 }
