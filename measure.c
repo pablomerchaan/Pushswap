@@ -95,12 +95,12 @@ int	measureR(struct change actual, int *list, int length)
 	{
 		c = 0;
 		measure += sq(list[actual.idx - 1]);
-		while (actual.idx != c + 2)
+		while (actual.idx != c + 1)
 		{
 			measure += sq(list[c] - c - 1);
 			c++;
 		}
-		c = c + 2;
+		c++;
 		while (c < length)
 		{
 			measure += sq(list[c]  - c);
@@ -127,12 +127,12 @@ int	measureR(struct change actual, int *list, int length)
 	{
 		c = 0;
 		measure += sq(list[actual.idx - 1]);
-		while (actual.idx != c + 2)
+		while (actual.idx != c + 1)
 		{
 			measure += sq(list[c] - c - 1);
 			c++;
 		}
-		c = c + 2;
+		c++;
 		measure += sq(list[c] - length + 1);
 		c++;
 		while (c < length)
@@ -234,7 +234,7 @@ int	main()
 	int *p;
 
 	test.idx = 2;
-	test.type = 10;
+	test.type = 7;
 	m = 4;
 	p = list;
 	while(m >= 0)
