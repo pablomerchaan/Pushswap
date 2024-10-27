@@ -1,5 +1,20 @@
 #include "pushswap.h"
 
+int	fastmeasure(int *list, int length)
+{
+	int	c;
+	int	sum;
+
+	c = 0;
+	sum = 0;
+	while (c < length)
+	{
+		sum += sq(list[c] - c);
+		c++;
+	}
+	return (sum);
+}
+
 int	measureSASB(struct change actual, int *list, int length)
 {
 	int	c;
@@ -18,8 +33,10 @@ int	measureSASB(struct change actual, int *list, int length)
 				c++;
 			}
 			else
+			{
 				measure += sq(list[c] - c);
-			c++;
+				c++;
+			}
 		}
 	}
 	else
@@ -31,11 +48,13 @@ int	measureSASB(struct change actual, int *list, int length)
 			{
 				measure += sq(list[c] - c - 1);
 				measure += sq(list[c + 1] - c);
-				c++;
+				c = c + 2;
 			}
 			else
+			{
 				measure += sq(list[c] - c);
-			c++;
+				c++;
+			}
 		}
 	}
 	return (measure);
@@ -136,7 +155,7 @@ int	measureRR(struct change actual, int *list, int length)
 		c = 0;
 		while (actual.idx != c + 1)
 		{
-			measure += sq(list[c] - c + 1);
+			measure += sq(list[c + 1] - c);
 			c++;
 		}
 		measure += sq(list[0] - c);
@@ -156,10 +175,9 @@ int	measureRR(struct change actual, int *list, int length)
 			c++;
 		}
 		measure += sq(list[length - 1] - c);
-		c++;
 		while (c + 1 < length)
 		{
-			measure += sq(list[c]  - c + 1);
+			measure += sq(list[c]  - c - 1);
 			c++;
 		}
 	}
@@ -168,16 +186,15 @@ int	measureRR(struct change actual, int *list, int length)
 		c = 0;
 		while (actual.idx != c + 1)
 		{
-			measure += sq(list[c] - c + 1);
+			measure += sq(list[c + 1] - c);
 			c++;
 		}
 		measure += sq(list[0] - c);
 		c++;
-		measure += sq(list[c] - length + 1);
-		c++;
+		measure += sq(list[length - 1] - c);
 		while (c + 1 < length)
 		{
-			measure += sq(list[c]  - c + 1);
+			measure += sq(list[c]  - c - 1);
 			c++;
 		}
 	}
@@ -186,16 +203,50 @@ int	measureRR(struct change actual, int *list, int length)
 
 int	measure(struct change actual, int *list, int length)
 {
-	int	m;
+	int	m = 0;
 	if (actual.type == 0)
 		m = INT_MAX;
-	if (actual.type == 2 || actual.type == 3)
+	if (actual.type == 2 || actual.type == 3){
 		m = measureSASB(actual, list, length);
-	else if (actual.type == 4)
+		//printf("%s%i", "medida SA:  ", m);
+		}
+	else if (actual.type == 4){
 		m = measureSS(actual, list, length);
-	else if (actual.type == 5 || actual.type == 6 || actual.type == 7)
+		//printf("%s%i", "medida SS:  ", m);
+		}
+	else if (actual.type == 5 || actual.type == 6 || actual.type == 7){
 		m = measureR(actual, list, length);
-	else if (actual.type == 8 || actual.type == 9 || actual.type == 10)
+		//printf("%s%i", "medida R:  ", m);
+		}
+	else if (actual.type == 8 || actual.type == 9 || actual.type == 10){
 		m = measureRR(actual, list, length);
+		//printf("%s%i", "medida RR:  ", m);
+		}
 	return(m);
 }
+/*
+int	main()
+{
+	struct change test;
+	int m;
+	int fm;
+	int list[5];
+	int *p;
+
+	test.idx = 2;
+	test.type = 10;
+	m = 4;
+	p = list;
+	while(m >= 0)
+	{
+		list[m] = m + 3;
+		m--;
+	}
+	m = measure(test, p, 5);
+	p = transform(p, test, 5);
+	fm = fastmeasure(p, 5);
+	printf("%s%i\n", "measure:  ", m);
+	printf("%s%i\n", "fastmeasure:  ", fm);
+	return (0);
+}
+*/

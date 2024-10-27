@@ -63,20 +63,6 @@ int	*convert(struct change prev, struct change actual)
 	}
 	return (moves);
 }
-int	fastmeasure(int *list, int length)
-{
-	int	c;
-	int	sum;
-
-	c = 0;
-	sum = 0;
-	while (c < length)
-	{
-		sum += sq(list[c] - c);
-		c++;
-	}
-	return (sum);
-}
 
 int	main(int argc, char **argv)
 {
@@ -124,13 +110,14 @@ int	main(int argc, char **argv)
 		if (bestchange.type != 0)
 		{
 			transform(list, bestchange, length);
-			l = length;
-			while (l > 0)
+			l = 0;
+			while (l < length)
 			{
-				printf("%i ", list[l - 1]);
-				l--;
+				printf("%i ", list[l]);
+				l++;
 			}
 		}
 	}
+	free (list);
 	return(0);
 }

@@ -22,6 +22,7 @@ struct change changeRR(struct change prev, int length);
 struct change gen_change(struct change prev, int length);
 int	norm(struct change prev, int partition);
 int	sq(int c);
+int	fastmeasure(int *list, int length);
 int	measureSASB(struct change actual, int *list, int length);
 int	measureSS(struct change actual, int *list, int length);
 int	measureR(struct change actual, int *list, int length);
