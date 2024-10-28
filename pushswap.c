@@ -6,7 +6,7 @@ int	norm(struct change prev, int partition)
 	int	c;
 
 	c = 0;
-	if (prev.idx == partition)
+	if (prev.idx == partition || prev.type == 0)
 	{
 		return (1);
 	}
@@ -109,6 +109,13 @@ int	main(int argc, char **argv)
 		printf(",");
 		if (bestchange.type != 0)
 		{
+			l = 0;
+			while (l < length)
+			{
+				printf("%i ", list[l]);
+				l++;
+			}
+			printf("- %i,,%i ->", bestchange.type, bestchange.idx);
 			transform(list, bestchange, length);
 			l = 0;
 			while (l < length)

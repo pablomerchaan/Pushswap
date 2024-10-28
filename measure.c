@@ -30,7 +30,7 @@ int	measureSASB(struct change actual, int *list, int length)
 			{
 				measure += sq(list[c] - c - 1);
 				measure += sq(list[c + 1] - c);
-				c++;
+				c += 2;
 			}
 			else
 			{
@@ -230,7 +230,7 @@ int	main()
 	struct change test;
 	int m;
 	int fm;
-	int list[5];
+	int list[7];
 	int *p;
 
 	test.idx = 2;
@@ -242,11 +242,12 @@ int	main()
 		list[m] = m + 3;
 		m--;
 	}
+	list[5] = 23;
+	list[6] = 14;
 	m = measure(test, p, 5);
 	p = transform(p, test, 5);
 	fm = fastmeasure(p, 5);
 	printf("%s%i\n", "measure:  ", m);
 	printf("%s%i\n", "fastmeasure:  ", fm);
 	return (0);
-}
-*/
+}*/

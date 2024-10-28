@@ -4,7 +4,7 @@ struct change changeSA(struct change prev, int length)
 {
 	struct change new_change;
 
-	if (prev.idx < length + 1)
+	if (prev.idx < length)
 	{
 		new_change.idx = prev.idx + 1;
 		new_change.type = prev.type;
@@ -38,7 +38,7 @@ struct change	changeSS(struct change prev, int length)
 {
 	struct change	new_change;
 
-	if (prev.idx < length - 3 && prev.idx > 1)
+	if (prev.idx < length - 2 && prev.idx > 1)
 	{
 		new_change.idx = prev.idx + 1;
 		new_change.type = prev.type;
@@ -70,7 +70,7 @@ struct change	changeR(struct change prev, int length)
 	}
 	else if(prev.type == 6)
 	{
-		if(prev.idx < length - 3)
+		if(prev.idx < length - 2)
 		{
 			new_change.type = prev.type;
 			new_change.idx = prev.idx + 1;
@@ -116,7 +116,7 @@ struct change changeRR(struct change prev, int length)
 	}
 	else if(prev.type == 9)
 	{
-		if(prev.idx < length - 3)
+		if(prev.idx < length - 2)
 		{
 			new_change.type = prev.type;
 			new_change.idx = prev.idx + 1;
